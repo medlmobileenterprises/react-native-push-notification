@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.dieam.reactnativepushnotification.helpers.ApplicationBadgeHelper;
 import com.facebook.react.bridge.ActivityEventListener;
@@ -24,6 +25,7 @@ import com.facebook.react.bridge.WritableMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import com.google.android.gms.iid.InstanceID;
 
 public class RNPushNotification extends ReactContextBaseJavaModule implements ActivityEventListener {
     public static final String LOG_TAG = "RNPushNotification";// all logging should use this tag
@@ -123,6 +125,7 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
             bundle.putString("id", String.valueOf(mRandomNumberGenerator.nextInt()));
         }
         mRNPushNotificationHelper.sendToNotificationCentre(bundle);
+
     }
 
     @ReactMethod
@@ -197,5 +200,16 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void registerNotificationActions(ReadableArray actions) {
         registerNotificationsReceiveNotificationActions(actions);
+    }
+    @ReactMethod
+    public void unregisterForPushNotifications(String senderId){
+        String authorizedEntity = senderId;
+        String scope = "GCM";
+        try{
+            InstanceID.getInstance(getReactApplicationContext()).deleteToken(authorizedEntity,scope);
+        }
+        catch (Exception e){
+            Log.e("", e.getMessage());
+        }
     }
 }

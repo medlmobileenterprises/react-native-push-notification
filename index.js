@@ -319,4 +319,12 @@ Notifications.clearAllNotifications = function() {
 	return this.callNative('clearAllNotifications', arguments)
 }
 
+Notifications.unregisterForPushNotifications = function() {
+  //
+  if ( Platform.OS === 'android' ) {
+    if ( typeof this.senderID !== 'undefined' ) {
+  		return this.callNative('unregisterForPushNotifications', [ this.senderID ]);
+		}
+	}
+}
 module.exports = Notifications;
